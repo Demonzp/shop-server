@@ -13,7 +13,7 @@ export default class CustomError extends Error{
         return this._code;
     }
 
-    serializeErrors() {
+    serializeErrors():any {
         return this.message;
     }
 }

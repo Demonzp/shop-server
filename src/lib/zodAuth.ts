@@ -23,7 +23,6 @@ export const formRegisterZod = z.object({
     }),
     password: z
         .string()
-        .min(8, { message: 'Пароль должен иметь не мение 8 символов' })
         .regex(passwordValidation, {
             message: `Пароль может состоять из латинских символов, цыфр и спецсимволов "@$!%*?&" и должен иметь:
                 - не менее 8 и не более 16 символов
