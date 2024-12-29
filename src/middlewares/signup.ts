@@ -3,20 +3,26 @@ import BadRequestError from "../errors/badRequestError";
 import { formRegisterZod } from "../lib/zodAuth";
 import ValidationError from "../errors/validationError";
 import { parseZodError } from "../lib/zodGlobal";
-import { ZodIssue } from "zod";
 
 export const signupMiddl = async (req:Request, _:Response, next:NextFunction):Promise<any>=>{
-    if(req.body.hasOwnProperty('currentUser')){
-        throw new BadRequestError('user already signin!');
-    }
-    console.log('signupMiddl');
-    console.log('req.body = ', req.body);
+    try {
+        if(req.body.hasOwnProperty('currentUser')){
+            throw new BadRequestError('user already signin!');
+        }
+        console.log('signupMiddl');
+        console.log('req.body = ', req.body);
+        
+        const validate = formRegisterZod.safeParse(req.body);
+        if(!validate.success){
+            console.log('validate.error = ', validate.error.issues);
+            const zodData = parseZodError(validate.error.issues)
+            console.log('zodData = ', zodData);
+            throw new ValidationError(zodData);
+        }
     
-    const validate = formRegisterZod.safeParse(req.body);
-    if(!validate.success){
-        console.log('validate.error = ', validate.error.issues);
-        throw new ValidationError(parseZodError(validate.error.issues));
+        return next();
+    } catch (error) {
+        throw error;
     }
-
-    return next();
+    
 }
