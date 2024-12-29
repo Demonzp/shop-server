@@ -17,8 +17,8 @@ export const signin = async (req:Request, res:Response):Promise<any>=>{
 export const signup = async (req:Request, res:Response):Promise<any>=>{
     try {
         //console.log('req.body = ', req.body);
-        //const users = await prisma.user.findMany();
-        //console.log('users = ', users);
+        const users = await prisma.user.findMany();
+        console.log('users = ', users);
         return res.json({success: 'signup'});
     } catch (error) {
         console.log('error = ', (error as Error).message);

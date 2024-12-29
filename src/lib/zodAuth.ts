@@ -6,9 +6,9 @@ const passwordValidation = new RegExp(
 
 export const formRegisterZod = z.object({
     email: z.string().trim().toLowerCase().email({ message: 'Введите корректную почту' }),
-    firstName: z.string().min(2, { message: 'Имя должно содержать не менее 2-х символов' }).max(80, {message: 'Имя должно содержать не более 80 символов'}),
-    secondName: z.string().optional(),
-    lastName: z.string().min(2, { message: 'Имя должно содержать не менее 2-х символов' }).max(80, {message: 'Имя должно содержать не более 80 символов'}),
+    firstName: z.string().trim().min(2, { message: 'Имя должно содержать не менее 2-х символов' }).max(80, {message: 'Имя должно содержать не более 80 символов'}),
+    secondName: z.string().trim().optional(),
+    lastName: z.string().trim().min(2, { message: 'Имя должно содержать не менее 2-х символов' }).max(80, {message: 'Имя должно содержать не более 80 символов'}),
     phone: z.string().trim().toLowerCase().superRefine((phone, ctx)=>{
         if(phone.length===0){
             return;
@@ -23,6 +23,7 @@ export const formRegisterZod = z.object({
     }),
     password: z
         .string()
+        .trim()
         .regex(passwordValidation, {
             message: `Пароль может состоять из латинских символов, цыфр и спецсимволов "@$!%*?&" и должен иметь:
                 - не менее 8 и не более 16 символов
