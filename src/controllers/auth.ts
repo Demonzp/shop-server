@@ -31,7 +31,16 @@ export const signup = async (req:Request, res:Response):Promise<any>=>{
                 password: passwordToHash(req.body.password),
             }
         });
+
+        const verefied = await prisma.verifiedEmail.create({
+            data: {
+                userId: user.id,
+                token: createId()
+            }
+        });
+
         console.log('user = ', user);
+        console.log('verefied = ', verefied);
         return res.json({success: 'signup'});
     } catch (error) {
         console.log('error = ', (error as Error).message);
