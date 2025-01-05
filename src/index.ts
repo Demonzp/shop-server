@@ -5,6 +5,7 @@ import cors from 'cors';
 import path from 'node:path';
 import { errorHandle } from './middlewares/errorHandle';
 import { authRouter } from './routes/auth';
+import { userRouter } from './routes/user';
 
 dotenv.config();
 
@@ -23,6 +24,7 @@ app.get('/', (req: Request, res: Response) => {
 });
 
 app.use(authRouter);
+app.use(userRouter);
 app.use(errorHandle);
 
 app.listen(port, () => {
