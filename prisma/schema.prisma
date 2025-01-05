@@ -18,16 +18,16 @@ model User {
     email      String    @unique
     password   String    @db.VarChar(256)
     role       UserRole  @default(USER)
-    verified   DateTime?
+    verified   String?
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 }
 
 model VerifiedEmail {
-    id     Int    @id @default(autoincrement())
-    userId Int    @unique
-    token  String
+    id        Int      @id @default(autoincrement())
+    userUid   String   @unique
+    token     String
     createdAt DateTime @default(now())
 }
 
