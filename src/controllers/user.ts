@@ -38,7 +38,13 @@ export const verifiedEmail = async (req: Request, res: Response): Promise<any> =
                 verified: String(Date.now())
             }
         });
+        await prisma.verifiedEmail.delete({
+            where:{
+                id: verefied.id
+            }
+        });
         console.log('users = ', verefied);
+
         return res.json({ success: 'verified' });
     } catch (error) {
         console.log('error = ', (error as Error).message);

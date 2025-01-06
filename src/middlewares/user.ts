@@ -1,10 +1,10 @@
 import { NextFunction, Request, Response } from "express";
 import BadRequestError from "../errors/badRequestError";
-import { formVerefiedEmailZod } from "../lib/zodUser";
+import { formVerifiedEmailZod } from "../lib/zodUser";
 
-export const verefiedEmailMiddl = async (req: Request, _: Response, next: NextFunction): Promise<any> => {
+export const verifiedEmailMiddl = async (req: Request, _: Response, next: NextFunction): Promise<any> => {
     try {
-        const validate = formVerefiedEmailZod.safeParse(req.body);
+        const validate = formVerifiedEmailZod.safeParse(req.body);
         if (!validate.success) {
             console.log('validate.error = ', validate.error.issues);
             throw new BadRequestError('Неверная ссылка верификации електронной почты!');
