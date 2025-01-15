@@ -31,6 +31,7 @@ export const formRegisterZod = z.object({
             `
         }),
     repeatPassword: z.string(),
+    checkbox: z.literal<boolean>(true, { errorMap: () => ({ message: "Примите пользовательское соглашение!", }), })
 })
 .refine((data)=>data.password===data.repeatPassword, {
     message: "Пароль не верный",

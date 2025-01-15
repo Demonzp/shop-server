@@ -4,7 +4,7 @@ import { prisma } from "../../prisma/prisma-client";
 
 export const verifiedEmail = async (req: Request, res: Response): Promise<any> => {
     try {
-        //console.log('req.body = ', req.body);
+        console.log('req.body = ', req.body);
         const verefied = await prisma.verifiedEmail.findFirst({
             where:{
                 userUid: req.body.userUid,

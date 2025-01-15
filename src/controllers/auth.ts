@@ -7,8 +7,18 @@ import { passwordToHash } from "../lib/password";
 export const signin = async (req:Request, res:Response):Promise<any>=>{
     try {
         //console.log('req.body = ', req.body);
-        const users = await prisma.user.findMany();
-        console.log('users = ', users);
+        const user = await prisma.user.findFirst({
+            where:{
+                email: req.body.email
+            }
+        });
+        console.log('user = ', user);
+        const ip = req.ip;
+        console.log('ip = ', ip);
+        const agent = req.get('User-Agent');
+        console.log('agent = ', agent);
+        
+        
         return res.json({success: 'signin'});
     } catch (error) {
         console.log('error = ', (error as Error).message);

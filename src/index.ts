@@ -18,6 +18,8 @@ app.use(express.static(p));
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.set('trust proxy', true);
+
 
 app.get('/', (req: Request, res: Response) => {
   res.send('Hello, TypeScript Express!');
