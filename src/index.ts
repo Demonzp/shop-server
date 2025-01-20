@@ -6,6 +6,7 @@ import path from 'node:path';
 import { errorHandle } from './middlewares/errorHandle';
 import { authRouter } from './routes/auth';
 import { userRouter } from './routes/user';
+import { currentUser } from './middlewares/currentUser';
 
 dotenv.config();
 
@@ -25,6 +26,7 @@ app.get('/', (req: Request, res: Response) => {
   res.send('Hello, TypeScript Express!');
 });
 
+app.use(currentUser);
 app.use(authRouter);
 app.use(userRouter);
 app.use(errorHandle);

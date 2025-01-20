@@ -17,6 +17,7 @@ export const signinMiddl = async (req: Request, _: Response, next: NextFunction)
         console.log('zodData = ', zodData);
         throw new ValidationError(zodData);
     }
+    
     req.body = {...validate.data};
     return next();
 }

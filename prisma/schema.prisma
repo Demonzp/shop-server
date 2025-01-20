@@ -9,15 +9,15 @@ datasource db {
 }
 
 model User {
-    id         Int       @id @default(autoincrement())
-    uid        String    @unique @db.VarChar(256)
-    firstName  String    @db.VarChar(80)
-    secondName String?   @db.VarChar(80)
-    lastName   String    @db.VarChar(80)
-    phone      String?   @db.VarChar(16)
-    email      String    @unique
-    password   String    @db.VarChar(256)
-    role       UserRole  @default(USER)
+    id         BigInt   @id @default(autoincrement())
+    uid        String   @unique @db.VarChar(256)
+    firstName  String   @db.VarChar(80)
+    secondName String?  @db.VarChar(80)
+    lastName   String   @db.VarChar(80)
+    phone      String?  @db.VarChar(16)
+    email      String   @unique
+    password   String   @db.VarChar(256)
+    role       UserRole @default(USER)
     verified   String?
 
     createdAt DateTime @default(now())
@@ -25,19 +25,19 @@ model User {
 }
 
 model VerifiedEmail {
-    id        Int      @id @default(autoincrement())
+    id        BigInt   @id @default(autoincrement())
     userUid   String   @unique
     token     String
     createdAt DateTime @default(now())
 }
 
 model Session {
-    id         Int      @id @default(autoincrement())
-    userId     Int
+    id         BigInt   @id @default(autoincrement())
+    userId     BigInt
     ip         String
     token      String   @unique
     agent      String   @db.VarChar(180)
-    expiration Int
+    expiration BigInt
     createdAt  DateTime @default(now())
     updatedAt  DateTime @updatedAt
 }
