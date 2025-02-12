@@ -5,7 +5,7 @@ import { createId } from "../lib/global";
 import { comparePassword, passwordToHash } from "../lib/password";
 import bruteforceList from "../lib/bruteforceGuard";
 import jwt from "jsonwebtoken";
-import { getUserLogin } from "../lib/user";
+import { delOldUserSesions, getUserLogin } from "../lib/user";
 
 export const signin = async (req: Request, res: Response): Promise<any> => {
     try {
@@ -40,22 +40,23 @@ export const signin = async (req: Request, res: Response): Promise<any> => {
             throw new Error('Неверный логин или пароль');
         }
 
-        console.log('user = ', user);
+        //console.log('user = ', user);
         //const agent = req.get('User-Agent');
-        console.log('agent = ', agent);
+        //console.log('agent = ', agent);
         const tokenData = {
             ip,
             agent,
             userUid: user.uid,
         };
 
-        const expires = Date.now() + 14 * 12 * 60 * 60 * 1000;
+        const expires = 14 * 12 * 60 * 60 * 1000;
 
-        const token = jwt.sign({
-            data: tokenData
-        }, (process.env.JWT_KEY as string), { expiresIn: expires });
+        //const expires = 60 * 1000;
+
+        const token = jwt.sign(tokenData, (process.env.JWT_KEY as string), { expiresIn: '14d' });
 
         const dataUser = getUserLogin(user);
+        const expiresUser = Date.now()+expires;
         console.log('token = ', token);
 
         const sessionData = {
@@ -63,14 +64,16 @@ export const signin = async (req: Request, res: Response): Promise<any> => {
             userId: user.id,
             token,
             agent: agent as string,
-            expiration: expires
+            expiration: expiresUser
         }
+
+        await delOldUserSesions(user, ip as string, agent as string);
 
         await prisma.session.create({
             data: sessionData
         });
 
-        return res.json({ token, user: dataUser });
+        return res.json({ token, user: dataUser, expiresUser });
     } catch (error) {
         console.log('error = ', (error as Error).message);
         throw new BadRequestError((error as Error).message);
@@ -108,3 +111,29 @@ export const signup = async (req: Request, res: Response): Promise<any> => {
         throw new BadRequestError('Что то пошло не так!');
     }
 }
+
+export const signout = async (req: Request, res: Response): Promise<any> => {
+    try {
+        if (!req.body.hasOwnProperty('currentUser')) {
+            throw new BadRequestError('Что то пошло не так!');
+        }
+        const currentUser = req.body['currentUser'];
+        const user = await prisma.user.findFirst({
+            where:{
+                uid: currentUser.userUid
+            }
+        });
+        if(!user){
+            throw new BadRequestError('Что то пошло не так!'); 
+        }
+        await prisma.session.delete({
+            where:{
+                userId: user?.id,
+                token: req.headers.authorization as string
+            }
+        });
+        return res.json({ success: 'signout' });
+    } catch (error) {
+        throw new BadRequestError('Что то пошло не так!');
+    }
+};

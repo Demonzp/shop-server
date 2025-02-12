@@ -55,5 +55,4 @@ export const signupMiddl = async (req:Request, _:Response, next:NextFunction):Pr
     } catch (error) {
         throw error;
     }
-    
 }
