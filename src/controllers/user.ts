@@ -51,3 +51,13 @@ export const verifiedEmail = async (req: Request, res: Response): Promise<any> =
         throw new BadRequestError((error as Error).message);
     }
 }
+
+export const changePassword = async (req: Request, res: Response): Promise<any> => {
+    try {
+
+        return res.json({ success: 'changePassword' });
+    } catch (error) {
+        console.log('error = ', (error as Error).message);
+        throw new BadRequestError((error as Error).message);
+    }
+}
