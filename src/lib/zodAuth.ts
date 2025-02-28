@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-const passwordValidation = new RegExp(
+export const passwordValidation = new RegExp(
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]*)[A-Za-z\d@$!%*?&]{8,}$/
 );
 

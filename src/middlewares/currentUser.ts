@@ -34,7 +34,7 @@ export const currentUser = async (req: Request, _: Response, next: NextFunction)
         // }
 
         req.body['currentUser'] = {...payload};
-
+        
         return next();
     } catch (error) {
         throw new BadRequestError((error as Error).message);

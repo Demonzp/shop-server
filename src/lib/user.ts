@@ -21,13 +21,13 @@ export const delOldUserSesions = async (user:User, ip: string, agent: string)=>{
             where:{
                 OR:[
                     {
-                        userId: user.id,
+                        userUid: user.uid,
                         expiration:{
                             lte: Date.now()
                         }
                     },
                     {
-                        userId: user.id,
+                        userUid: user.uid,
                         ip,
                         agent
                     }

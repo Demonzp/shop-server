@@ -6,6 +6,7 @@ import ValidationError from "../errors/validationError";
 
 export const signinMiddl = async (req: Request, _: Response, next: NextFunction): Promise<any> => {
     if (req.body.hasOwnProperty('currentUser')) {
+        console.log('currentUser = ', req.body.currentUser);
         throw new BadRequestError('user already signin!');
     }
     console.log('signupMiddl');

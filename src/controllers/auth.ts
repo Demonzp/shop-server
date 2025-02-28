@@ -61,7 +61,7 @@ export const signin = async (req: Request, res: Response): Promise<any> => {
 
         const sessionData = {
             ip: ip as string,
-            userId: user.id,
+            userUid: user.uid,
             token,
             agent: agent as string,
             expiration: expiresUser
@@ -128,7 +128,7 @@ export const signout = async (req: Request, res: Response): Promise<any> => {
         }
         await prisma.session.delete({
             where:{
-                userId: user?.id,
+                userUid: user?.uid,
                 token: req.headers.authorization as string
             }
         });

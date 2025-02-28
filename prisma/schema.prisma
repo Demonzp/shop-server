@@ -32,7 +32,7 @@ model VerifiedEmail {
 
 model Session {
     id         Int   @id @default(autoincrement())
-    userId     BigInt
+    userUid    String
     ip         String
     token      String   @unique
     agent      String
