@@ -52,7 +52,7 @@ export const signin = async (req: Request, res: Response): Promise<any> => {
         const expires = 14 * 12 * 60 * 60 * 1000;
 
         //const expires = 60 * 1000;
-
+        //console.log('JWT_KEY = ',process.env.JWT_KEY);
         const token = jwt.sign(tokenData, (process.env.JWT_KEY as string), { expiresIn: '14d' });
 
         const dataUser = getUserLogin(user);
@@ -65,7 +65,7 @@ export const signin = async (req: Request, res: Response): Promise<any> => {
             token,
             agent: agent as string,
             expiration: expiresUser
-        }
+        };
 
         await delOldUserSesions(user, ip as string, agent as string);
 

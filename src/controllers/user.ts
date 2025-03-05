@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import BadRequestError from "../errors/badRequestError";
 import { prisma } from "../../prisma/prisma-client";
+import { comparePassword, passwordToHash } from "../lib/password";
 
 export const verifiedEmail = async (req: Request, res: Response): Promise<any> => {
     try {
@@ -54,7 +55,36 @@ export const verifiedEmail = async (req: Request, res: Response): Promise<any> =
 
 export const changePassword = async (req: Request, res: Response): Promise<any> => {
     try {
+        console.log('currentUser = ', req.body.currentUser);
+        const userUid = req.body.currentUser.userUid;
 
+        const user = await prisma.user.findFirst({
+            where:{
+                uid: userUid
+            }
+        });
+
+        if(!user){
+            throw new BadRequestError('Ошибка авторизации!');
+        }
+
+        const passwordMatch = comparePassword(
+            user.password,
+            req.body.password
+        );
+
+        if (!passwordMatch) {
+            throw new Error('Неверный пароль');
+        }
+
+        await prisma.user.update({
+            where:{
+                id:user.id
+            },
+            data:{
+                password: passwordToHash(req.body.new_password)
+            }
+        });
         return res.json({ success: 'changePassword' });
     } catch (error) {
         console.log('error = ', (error as Error).message);
