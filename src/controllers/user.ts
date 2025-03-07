@@ -91,3 +91,25 @@ export const changePassword = async (req: Request, res: Response): Promise<any> 
         throw new BadRequestError((error as Error).message);
     }
 }
+
+export const repairPassword = async (req: Request, res: Response): Promise<any> => {
+    try {
+       
+
+        const user = await prisma.user.findFirst({
+            where:{
+                email: req.body.email
+            }
+        });
+
+        if(!user){
+            throw new BadRequestError('Пользователя с такой почтой не найдено!');
+        }
+
+        
+        return res.json({ success: 'repairPassword' });
+    } catch (error) {
+        console.log('error = ', (error as Error).message);
+        throw new BadRequestError((error as Error).message);
+    }
+}

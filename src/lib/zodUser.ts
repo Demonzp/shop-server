@@ -26,3 +26,7 @@ export const formChangePassword = z.object({
                     `
         }),
 });
+
+export const formRepairPassword = z.object({
+    email: z.string().trim().toLowerCase().email({ message: 'Введите корректную почту' }),
+});
