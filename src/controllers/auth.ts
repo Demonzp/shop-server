@@ -84,6 +84,10 @@ export const signup = async (req: Request, res: Response): Promise<any> => {
     try {
         //console.log('req.body = ', req.body);
         //const users = await prisma.user.findMany();
+        const ip = req.ip;
+        if (ip && !bruteforceList.detect(ip)) {
+            throw new Error('!!!!');
+        }
         const user = await prisma.user.create({
             data: {
                 uid: createId(),

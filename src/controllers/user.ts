@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import BadRequestError from "../errors/badRequestError";
 import { prisma } from "../../prisma/prisma-client";
 import { comparePassword, passwordToHash } from "../lib/password";
+import { createId, generateShortHash } from "../lib/global";
 
 export const verifiedEmail = async (req: Request, res: Response): Promise<any> => {
     try {
@@ -92,10 +93,9 @@ export const changePassword = async (req: Request, res: Response): Promise<any> 
     }
 }
 
-export const repairPassword = async (req: Request, res: Response): Promise<any> => {
+export const createRepairPasswordToken = async (req: Request, res: Response): Promise<any> => {
     try {
        
-
         const user = await prisma.user.findFirst({
             where:{
                 email: req.body.email
@@ -106,7 +106,60 @@ export const repairPassword = async (req: Request, res: Response): Promise<any> 
             throw new BadRequestError('Пользователя с такой почтой не найдено!');
         }
 
-        
+        const repairToken = await prisma.repairPassword.findFirst({
+            where:{
+                userId: user.id
+            }
+        });
+
+        const newToken = generateShortHash(createId());
+        const expires = 14 * 12 * 60 * 60 * 1000;
+        const expiresToken = Date.now()+expires;
+
+        if(repairToken){
+            await prisma.repairPassword.update({
+                where:{
+                    id: repairToken.id
+                },
+                data:{
+                    token: newToken,
+                    expiration: expiresToken
+                }
+            });
+            
+        }else{
+            await prisma.repairPassword.create({
+                data:{
+                    userId: user.id,
+                    token: newToken,
+                    expiration: expiresToken
+                }
+            });
+        }
+
+        return res.json({ success: 'repairPassword' });
+    } catch (error) {
+        console.log('error = ', (error as Error).message);
+        throw new BadRequestError((error as Error).message);
+    }
+}
+
+export const repairPassword = async (req: Request, res: Response): Promise<any> => {
+    try {
+        const token = req.body.token;
+        const repairToken = await prisma.repairPassword.findFirst({
+            where:{
+                token,
+                expiration:{
+                    lt: Date.now()
+                }
+            }
+        });
+
+        if(!repairToken){
+            throw new BadRequestError('Не верный адрес!!!');
+        }
+
         return res.json({ success: 'repairPassword' });
     } catch (error) {
         console.log('error = ', (error as Error).message);

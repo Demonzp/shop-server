@@ -27,6 +27,19 @@ export const formChangePassword = z.object({
         }),
 });
 
-export const formRepairPassword = z.object({
+export const formCreateRepairPasswordToken = z.object({
     email: z.string().trim().toLowerCase().email({ message: 'Введите корректную почту' }),
+});
+
+export const formRepairPassword = z.object({
+    token: z.string().trim(),
+    password: z
+        .string()
+        .trim()
+        .regex(passwordValidation, {
+            message: `Пароль может состоять из латинских символов, цыфр и спецсимволов "@$!%*?&" и должен иметь:
+                    - не менее 8 и не более 16 символов
+                    - иметь хотябы 1 цыфру 1 маленький символ латиницы 1 большой символ латиницы
+                `
+        }),
 });

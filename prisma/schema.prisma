@@ -8,7 +8,7 @@ datasource db {
 }
 
 model User {
-    id         Int  @id @default(autoincrement())
+    id         Int     @id @default(autoincrement())
     uid        String  @unique
     firstName  String
     secondName String?
@@ -24,18 +24,27 @@ model User {
 }
 
 model VerifiedEmail {
-    id        Int   @id @default(autoincrement())
+    id        Int      @id @default(autoincrement())
     userUid   String   @unique
     token     String
     createdAt DateTime @default(now())
 }
 
 model Session {
-    id         Int   @id @default(autoincrement())
+    id         Int      @id @default(autoincrement())
     userUid    String
     ip         String
     token      String   @unique
     agent      String
+    expiration BigInt
+    createdAt  DateTime @default(now())
+    updatedAt  DateTime @updatedAt
+}
+
+model RepairPassword {
+    id         Int      @id @default(autoincrement())
+    userId     Int      
+    token      String   @unique
     expiration BigInt
     createdAt  DateTime @default(now())
     updatedAt  DateTime @updatedAt
